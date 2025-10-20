@@ -278,9 +278,10 @@ async def permission_error(ctx, error):
         await ctx.send(
             "❌ Vous devez être modérateur pour utiliser cette commande !")
 
-if __name__ == "__main__":
-    threading.Thread(target=run_web).start()
-    bot.run(TOKEN)
+
 
 token = os.environ["TOKEN_BOT_DISCORD"]
+if __name__ == "__main__":
+    threading.Thread(target=run_web).start()
+    bot.run(token)
 bot.run(token)
