@@ -12,7 +12,7 @@ import time
 
 
 
-threading.Thread(target=keep_alive).start()
+
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -32,7 +32,7 @@ def keep_alive():
         except Exception as e:
             print("⚠️ Erreur keep-alive:", e)
         time.sleep(300)  # toutes les 5 minutes
-
+threading.Thread(target=keep_alive).start()
 
 app = Flask(__name__)
 
