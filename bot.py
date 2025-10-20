@@ -7,6 +7,11 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from flask import Flask
 import threading
+import threading, requests, time
+
+
+
+threading.Thread(target=keep_alive).start()
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -14,6 +19,19 @@ intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 plannings = defaultdict(lambda: defaultdict(list))
+
+
+
+def keep_alive():
+    url = "https://https://planningbot.onrender.com"  # ⚠️ remplace par ton URL Render exacte
+    while True:
+        try:
+            requests.get(url)
+            print("✅ Ping envoyé à Render pour garder le bot actif")
+        except Exception as e:
+            print("⚠️ Erreur keep-alive:", e)
+        time.sleep(300)  # toutes les 5 minutes
+
 
 app = Flask(__name__)
 
@@ -129,7 +147,11 @@ def get_week_days():
 @bot.event
 async def on_ready():
     print(f"✅ Bot connecté comme {bot.user}")
-    init_database()
+    try:
+        init_database()
+        print("✅ Base de données initialisée")
+    except Exception as e:
+        print("⚠️ Erreur init_database :", e)
     load_plannings()
     total = sum(len(days) for guild in plannings.values() for days in guild.values())
     print(f"{bot.user} est connecté et {total} événements ont été chargés depuis la base !")
