@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from flask import Flask
+import threading
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -12,6 +14,16 @@ intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 plannings = defaultdict(lambda: defaultdict(list))
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+def run_web():
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
 
 
 def get_db_connection():
@@ -266,6 +278,9 @@ async def permission_error(ctx, error):
         await ctx.send(
             "❌ Vous devez être modérateur pour utiliser cette commande !")
 
+if __name__ == "__main__":
+    threading.Thread(target=run_web).start()
+    bot.run(TOKEN)
 
 token = os.environ["TOKEN_BOT_DISCORD"]
 bot.run(token)
