@@ -7,7 +7,8 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from flask import Flask
 import threading
-import threading, requests, time
+import requests
+import time
 
 
 
