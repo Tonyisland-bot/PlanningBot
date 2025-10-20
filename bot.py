@@ -116,6 +116,7 @@ def get_week_days():
 
 @bot.event
 async def on_ready():
+    print(f"✅ Bot connecté comme {bot.user}")
     init_database()
     load_plannings()
     total = sum(len(days) for guild in plannings.values() for days in guild.values())
