@@ -7,11 +7,6 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from flask import Flask
 import threading
-import requests
-import time
-
-
-
 
 
 intents = discord.Intents.default()
@@ -21,29 +16,18 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 plannings = defaultdict(lambda: defaultdict(list))
 
-
-
-def keep_alive():
-    url = "https://https://planningbot.onrender.com"  # ⚠️ remplace par ton URL Render exacte
-    while True:
-        try:
-            requests.get(url)
-            print("✅ Ping envoyé à Render pour garder le bot actif")
-        except Exception as e:
-            print("⚠️ Erreur keep-alive:", e)
-        time.sleep(300)  # toutes les 5 minutes
-threading.Thread(target=keep_alive).start()
-
+# === KEEP ALIVE (serveur Flask pour Render) ===
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Bot is running!"
+    return "✅ Bot is running and alive!"
 
 def run_web():
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
 
+# ==============================================
 
 def get_db_connection():
     return psycopg2.connect(os.environ['DATABASE_URL'])
@@ -163,12 +147,9 @@ async def on_ready():
 @commands.has_permissions(manage_messages=True)
 async def bonjour(ctx):
     await ctx.send(f'Bonjour {ctx.author.mention} !')
-    await ctx.send(
-        f'Je suis un bot qui donne des planning {ctx.author.mention} !')
+    await ctx.send(f'Je suis un bot qui donne des plannings {ctx.author.mention} !')
     await ctx.send(f"J'espère que tu vas bien {ctx.author.mention} !")
-    await ctx.send(
-        f"Si tu as besoin d'aide, n'hésite pas à demander {ctx.author.mention} !"
-    )
+    await ctx.send(f"Si tu as besoin d'aide, n'hésite pas à demander {ctx.author.mention} !")
     await ctx.send(f"Je suis en cours de développement {ctx.author.mention} !")
 
 
@@ -212,19 +193,12 @@ async def ajouter_planning(ctx, jour: str, *, texte: str):
 
     jour_lower = jour.lower()
     jours_map = {
-        'lundi': 0,
-        'mardi': 1,
-        'mercredi': 2,
-        'jeudi': 3,
-        'vendredi': 4,
-        'samedi': 5,
-        'dimanche': 6
+        'lundi': 0, 'mardi': 1, 'mercredi': 2, 'jeudi': 3,
+        'vendredi': 4, 'samedi': 5, 'dimanche': 6
     }
 
     if jour_lower not in jours_map:
-        await ctx.send(
-            "❌ Jour invalide ! Utilisez : lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche"
-        )
+        await ctx.send("❌ Jour invalide ! Utilisez : lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche")
         return
 
     day_index = jours_map[jour_lower]
@@ -234,15 +208,10 @@ async def ajouter_planning(ctx, jour: str, *, texte: str):
     plannings[guild_id][full_date].append(texte)
     save_event(guild_id, full_date, texte)
 
-    await ctx.send(
-        f"✅ Événement ajouté au planning du {day_info['jour']} {day_info['date']} {day_info['mois']} !"
-    )
+    await ctx.send(f"✅ Événement ajouté au planning du {day_info['jour']} {day_info['date']} {day_info['mois']} !")
 
 
-@bot.command(aliases=[
-    'ep',
-    'eplanning',
-])
+@bot.command(aliases=['ep', 'eplanning'])
 @commands.has_permissions(manage_messages=True)
 async def effacer_planning(ctx, jour: str | None = None):
     guild_id = ctx.guild.id
@@ -255,19 +224,12 @@ async def effacer_planning(ctx, jour: str | None = None):
         week_days = get_week_days()
         jour_lower = jour.lower()
         jours_map = {
-            'lundi': 0,
-            'mardi': 1,
-            'mercredi': 2,
-            'jeudi': 3,
-            'vendredi': 4,
-            'samedi': 5,
-            'dimanche': 6
+            'lundi': 0, 'mardi': 1, 'mercredi': 2, 'jeudi': 3,
+            'vendredi': 4, 'samedi': 5, 'dimanche': 6
         }
 
         if jour_lower not in jours_map:
-            await ctx.send(
-                "❌ Jour invalide ! Utilisez : lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche"
-            )
+            await ctx.send("❌ Jour invalide ! Utilisez : lundi, mardi, mercredi, jeudi, vendredi, samedi, dimanche")
             return
 
         day_index = jours_map[jour_lower]
@@ -281,6 +243,7 @@ async def effacer_planning(ctx, jour: str | None = None):
         else:
             await ctx.send(f"ℹ️ Aucun événement pour {day_info['jour']}")
 
+
 @bot.command()
 async def debug_planning(ctx):
     guild_id = ctx.guild.id
@@ -292,19 +255,16 @@ async def debug_planning(ctx):
         await ctx.send(f"{count} événements chargés pour ce serveur.")
 
 
-
 @bonjour.error
 @ajouter_planning.error
 @effacer_planning.error
 async def permission_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
-        await ctx.send(
-            "❌ Vous devez être modérateur pour utiliser cette commande !")
+        await ctx.send("❌ Vous devez être modérateur pour utiliser cette commande !")
 
 
-
-token = os.environ["TOKEN_BOT_DISCORD"]
+# === Lancement du serveur Flask + bot ===
 if __name__ == "__main__":
     threading.Thread(target=run_web).start()
+    token = os.environ["TOKEN_BOT_DISCORD"]
     bot.run(token)
-bot.run(token)
