@@ -7,7 +7,15 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from flask import Flask
 import threading
+import socket
+import sys
 
+lock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+try:
+    lock.bind(("127.0.0.1", 9999))
+except OSError:
+    print("⛔ Bot déjà lancé, arrêt.")
+    sys.exit(0)
 # ================== CONFIG DISCORD ==================
 intents = discord.Intents.default()
 intents.message_content = True
