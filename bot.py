@@ -29,19 +29,6 @@ def run_web():
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
 
-def keep_alive_ping():
-    """Ping régulier du service Render pour éviter l’arrêt du bot."""
-    url = os.environ.get("RENDER_EXTERNAL_URL")
-    if not url:
-        print("⚠️ Pas d'URL externe Render trouvée — ping désactivé.")
-        return
-    while True:
-        try:
-            requests.get(url)
-            print(f"🌐 Ping envoyé à {url}")
-        except Exception as e:
-            print("⚠️ Erreur lors du ping :", e)
-        time.sleep(600)  # ping toutes les 10 minutes
 
 # === BASE DE DONNÉES ===
 def get_db_connection():
@@ -235,5 +222,4 @@ async def permission_error(ctx, error):
 # === LANCEMENT DU SERVEUR WEB ET DU BOT ===
 if __name__ == "__main__":
     threading.Thread(target=run_web, daemon=True).start()
-    threading.Thread(target=keep_alive_ping, daemon=True).start()
     bot.run(os.environ["TOKEN_BOT_DISCORD"])
