@@ -18,8 +18,6 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 # === DONNÉES EN MÉMOIRE ===
 plannings = defaultdict(lambda: defaultdict(list))
 
-# === KEEP ALIVE (serveur Flask pour Render) ===
-app = Flask(__name__)
 
 @app.route('/')
 def home():
@@ -221,5 +219,4 @@ async def permission_error(ctx, error):
 
 # === LANCEMENT DU SERVEUR WEB ET DU BOT ===
 if __name__ == "__main__":
-    threading.Thread(target=run_web, daemon=True).start()
     bot.run(os.environ["TOKEN_BOT_DISCORD"])
