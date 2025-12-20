@@ -164,14 +164,14 @@ async def planning(ctx):
         events = plannings[guild_id].get(full_date, [])
         events_text = '\n\n'.join(f"• {event}" for event in events) if events else "*Aucune partie prévue.*"
         embed.add_field(name=f"━━━━━━━━━━━━━━━\n**{jour} {date} {mois}**", value=f"{events_text}\n​", inline=False)
-    embed.add_field(
+        
+    await ctx.send(embed=embed)
+        embed.add_field(
     name="ℹ️ Information",
     value="Si vous souhaitez avoir des games les jours où aucune game n'est prévue, "
           "vous pouvez toujours en acheter en faisant un ticket pour acheter un host (3€)",
     inline=False
 )
-    await ctx.send(embed=embed)
-
 @bot.command(aliases=['ap', 'aplanning'])
 @commands.has_permissions(manage_messages=True)
 async def ajouter_planning(ctx, jour: str, *, texte: str):
