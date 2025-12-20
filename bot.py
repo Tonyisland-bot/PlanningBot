@@ -19,15 +19,6 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 plannings = defaultdict(lambda: defaultdict(list))
 
 
-@app.route('/')
-def home():
-    return "✅ Bot is running and alive!"
-
-def run_web():
-    port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port)
-
-
 # === BASE DE DONNÉES ===
 def get_db_connection():
     return psycopg2.connect(os.environ['DATABASE_URL'])
