@@ -153,8 +153,8 @@ async def planning(ctx):
     await ctx.send(embed=embed)
 
 @bot.command(aliases=["i", "h", "host"])
-async def info():
-    print("Si vous souhaitez avoir des games les jours où aucune game n'est prévue vous pouvez toujours en acheter en faisant un ticket pour acheter un host (3€)")
+async def info(ctx):
+    await ctx.send("Si vous souhaitez avoir des games les jours où aucune game n'est prévue vous pouvez toujours en acheter en faisant un ticket pour acheter un host (3€)")
 
 @bot.command(aliases=["ap", "aplanning"])
 @commands.has_permissions(manage_messages=True)
