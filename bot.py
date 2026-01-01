@@ -137,8 +137,7 @@ async def planning(ctx):
     dernier_jour = week_days[-1]
 
     embed = discord.Embed(
-        title="📅 Planning du Sonic UHC",
-        description=f"Du {premier_jour['date']} {premier_jour['mois']} au {dernier_jour['date']} {dernier_jour['mois']}",
+        title=f"📅Planning du {premier_jour['date']} {premier_jour['mois']} au {dernier_jour['date']} {dernier_jour['mois']}",
         color=discord.Color.blue()
     )
 
@@ -153,7 +152,7 @@ async def planning(ctx):
         )
 
     embed.add_field(
-        name="ℹ️ Information",
+        name="ℹ️ Information (Sonic UHC)",
         value="Si vous souhaitez avoir des games les jours où aucune game n'est prévue, "
               "vous pouvez toujours en acheter en faisant un ticket pour acheter un host (3€)",
         inline=False
