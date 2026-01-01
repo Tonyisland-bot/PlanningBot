@@ -137,7 +137,7 @@ async def planning(ctx):
     dernier_jour = week_days[-1]
 
     embed = discord.Embed(
-        title=f"📅Planning du {premier_jour['date']} {premier_jour['mois']} au {dernier_jour['date']} {dernier_jour['mois']}",
+        title=f"📅 Planning du {premier_jour['date']} {premier_jour['mois']} au {dernier_jour['date']} {dernier_jour['mois']}",
         color=discord.Color.blue()
     )
 
