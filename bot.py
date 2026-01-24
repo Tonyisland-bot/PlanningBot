@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 import psycopg2
 from psycopg2.extras import RealDictCursor
+import sys
+print("PYTHON VERSION:", sys.version)
 
 # ================== DISCORD ==================
 intents = discord.Intents.default()
